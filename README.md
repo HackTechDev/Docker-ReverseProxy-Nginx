@@ -1,7 +1,8 @@
 Sous Docker, installation de 2 conteneurs sous Apache avec un reverse-proxy sous Nginx  
 ======================================================================================  
-
   
+Docker : Docker version 27.0.3, build 7d4bcd8  
+    
 * Construction de l'environnement :  
 
 ```
