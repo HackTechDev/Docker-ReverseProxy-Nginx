@@ -32,8 +32,6 @@ services:
     environment:
       PMA_HOST: serveur01db
       MYSQL_ROOT_PASSWORD: rootpassword
-    ports:
-      - "8012:80"
     networks:
       - app-network
     depends_on:
@@ -72,8 +70,6 @@ services:
     environment:
       PMA_HOST: serveur02db
       MYSQL_ROOT_PASSWORD: rootpassword
-    ports:
-      - "8022:80"
     networks:
       - app-network
     depends_on:
