@@ -1,0 +1,101 @@
+services:
+  serveur01site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: serveur01site
+    volumes:
+      - ./serveur01/site:/var/www/html
+      - ./serveur01/config/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./serveur01/sessions:/var/lib/php/sessions
+    networks:
+      - app-network
+    depends_on:
+      - serveur01db
+
+  serveur01db:
+    image: mariadb:10.5
+    container_name: serveur01db
+    volumes:
+      - serveur01db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    networks:
+      - app-network
+
+  serveur01dbadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: serveur01dbadmin
+    environment:
+      PMA_HOST: serveur01db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8012:80"
+    networks:
+      - app-network
+    depends_on:
+      - serveur01db
+
+  serveur02site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: serveur02site
+    volumes:
+      - ./serveur02/site:/var/www/html
+      - ./serveur02/config/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./serveur02/sessions:/var/lib/php/sessions
+    networks:
+      - app-network
+    depends_on:
+      - serveur02db
+
+  serveur02db:
+    image: mariadb:10.5
+    container_name: serveur02db
+    volumes:
+      - serveur02db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    networks:
+      - app-network
+
+  serveur02dbadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: serveur02dbadmin
+    environment:
+      PMA_HOST: serveur02db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8022:80"
+    networks:
+      - app-network
+    depends_on:
+      - serveur02db
+
+  nginx-proxy:
+    image: nginx:latest
+    container_name: nginx-proxy
+    depends_on:
+      - serveur01site
+      - serveur02site
+    networks:
+      - app-network
+    ports:
+      - "80:80"
+    volumes:
+    - ./serveur03/nginx.conf:/etc/nginx/nginx.conf:ro    
+      
+volumes:
+  serveur01db:
+  serveur02db:
+
+networks:
+  app-network:
+    driver: bridge
