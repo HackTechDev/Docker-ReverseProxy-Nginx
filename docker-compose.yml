@@ -9,7 +9,7 @@ services:
       - ./serveur01/config/000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./serveur01/sessions:/var/lib/php/sessions
     networks:
-      - app-network
+      - internalnetwork01
     depends_on:
       - serveur01db
 
@@ -24,7 +24,7 @@ services:
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     networks:
-      - app-network
+      - internalnetwork01
 
   serveur01dbadmin:
     image: phpmyadmin/phpmyadmin
@@ -33,7 +33,7 @@ services:
       PMA_HOST: serveur01db
       MYSQL_ROOT_PASSWORD: rootpassword
     networks:
-      - app-network
+      - internalnetwork01
     depends_on:
       - serveur01db
 
@@ -47,7 +47,7 @@ services:
       - ./serveur02/config/000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./serveur02/sessions:/var/lib/php/sessions
     networks:
-      - app-network
+      - internalnetwork01
     depends_on:
       - serveur02db
 
@@ -62,7 +62,7 @@ services:
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     networks:
-      - app-network
+      - internalnetwork01
 
   serveur02dbadmin:
     image: phpmyadmin/phpmyadmin
@@ -71,7 +71,7 @@ services:
       PMA_HOST: serveur02db
       MYSQL_ROOT_PASSWORD: rootpassword
     networks:
-      - app-network
+      - internalnetwork01
     depends_on:
       - serveur02db
 
@@ -82,7 +82,7 @@ services:
       - serveur01site
       - serveur02site
     networks:
-      - app-network
+      - internalnetwork01
     ports:
       - "80:80"
     volumes:
@@ -93,5 +93,5 @@ volumes:
   serveur02db:
 
 networks:
-  app-network:
+  internalnetwork01:
     driver: bridge
